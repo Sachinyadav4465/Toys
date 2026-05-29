@@ -8,7 +8,7 @@ const Navbar = () => {
   const { cartItems } = useContext(CartContext);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3 fw-bold">
 
       <div className="container">
 
@@ -47,7 +47,7 @@ const Navbar = () => {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="/shop">SHOP</Link>
+              <Link className="nav-link" to="/shops">SHOP</Link>
             </li>
 
             <li className="nav-item">

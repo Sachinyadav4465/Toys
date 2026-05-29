@@ -11,7 +11,8 @@ import Categories from './Pages/Categories'
 import Blogs from './Pages/Blogs'
 import ProductDetails from './Pages/ProductDetails'
 import Cart from './Pages/Cart'
-
+import CategoryPage from './Pages/CategoryPage'
+import Shop from './Pages/Shops'
 const App = () => {
 
   return (
@@ -47,7 +48,8 @@ const App = () => {
           path="/cart"
           element={<Cart />}
         />
-
+        <Route path="/category/:categoryName" element={<CategoryPage />} />
+        <Route path="/shops" element={<Shop />} />
       </Routes>
 
     </Router>
