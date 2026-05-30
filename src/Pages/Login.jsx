@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { Mail, Lock, ShoppingCart, ArrowRight } from "lucide-react"; // Modern Icons
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +11,6 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    // BACKEND INTEGRATION READY: Jab backend banega toh ye code active ho jayega
     try {
       console.log("Sending data to backend login API:", { email, password });
       
@@ -23,68 +22,101 @@ const Login = () => {
       const data = await response.json();
       */
 
-      // Abhi ke liye temporary success alert
-      toast.success("UI Tested! Ready for Backend API Connection.");
+      toast.success("Welcome back! Login Successful.");
       localStorage.setItem("isLoggedIn", "true");
       navigate("/");
 
     } catch (error) {
-      toast.error("Something went wrong with backend server!");
+      toast.error("Something went wrong with the server!");
     }
   };
 
   return (
     <div className="auth-wrapper">
       <div className="auth-card">
-        <div className="row g-0">
+        <div className="row g-0 h-100">
           
-          <div className="col-md-5 auth-sidebar d-none d-md-flex">
+          {/* Left Sidebar - Dynamic Gradient & Pattern */}
+          <div className="col-md-5 auth-sidebar d-none d-md-flex flex-column justify-content-between p-5 text-white">
             <div>
-              <h3>Login</h3>
-              <p className="mt-3">Get access to your Orders, Wishlist and Recommendations</p>
+              <div className="brand-logo mb-4">
+                <ShoppingCart className="me-2" size={28} />
+                <span>E-Shop</span>
+              </div>
+              <h2 className="fw-bold display-6">Welcome Back!</h2>
+              <p className="text-white-50 mt-3 fs-6">
+                Discover a curated collection of products tailored just for you. Log in to access your orders, wishlist, and personalized offers.
+              </p>
             </div>
-            <div className="text-center">
-              <span style={{ fontSize: "80px" }}>🛒</span>
+            <div className="footer-note text-white-50 small">
+              © 2026 E-Shop Inc. All rights reserved.
             </div>
           </div>
 
-          <div className="col-md-7">
-            <div className="auth-form-container">
-              <form onSubmit={handleLogin} className="d-flex flex-column gap-4">
+          {/* Right Section - Minimal & Clean Form */}
+          <div className="col-md-7 d-flex align-items-center">
+            <div className="auth-form-container p-4 p-sm-5 w-100">
+              <div className="form-header mb-4">
+                <h3 className="fw-bold text-dark">Sign In</h3>
+                <p className="text-muted small">Please enter your credentials to access your account.</p>
+              </div>
+
+              <form onSubmit={handleLogin} className="d-flex flex-column gap-3">
                 
-                <div className="auth-input-group">
-                  <input 
-                    type="email" 
-                    className="form-control" 
-                    placeholder="Enter Email Address" 
-                    required 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
+                {/* Email Input */}
+                <div className="form-group custom-input-group">
+                  <label className="form-label small text-muted fw-semibold">Email Address</label>
+                  <div className="input-wrapper">
+                    <Mail className="input-icon" size={18} />
+                    <input 
+                      type="email" 
+                      className="form-control custom-input" 
+                      placeholder="name@company.com" 
+                      required 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
                 </div>
 
-                <div className="auth-input-group">
-                  <input 
-                    type="password" 
-                    className="form-control" 
-                    placeholder="Enter Password" 
-                    required 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                {/* Password Input */}
+                <div className="form-group custom-input-group">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <label className="form-label small text-muted fw-semibold">Password</label>
+                    <a href="#forgot" className="small-link text-decoration-none">Forgot?</a>
+                  </div>
+                  <div className="input-wrapper">
+                    <Lock className="input-icon" size={18} />
+                    <input 
+                      type="password" 
+                      className="form-control custom-input" 
+                      placeholder="••••••••" 
+                      required 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
                 </div>
 
-                <p className="text-muted small m-0">
-                  By continuing, you agree to our Terms of Use and Privacy Policy.
-                </p>
+                {/* Terms and conditions */}
+                <div className="form-check my-2">
+                  <input className="form-check-input" type="checkbox" id="rememberMe" />
+                  <label className="form-check-label text-muted small" htmlFor="rememberMe">
+                    Keep me logged in
+                  </label>
+                </div>
 
-                <button type="submit" className="btn auth-btn-orange">
-                  Login
+                {/* Submit Button */}
+                <button type="submit" className="btn btn-login-action w-100 py-2.5 mt-2 fw-semibold d-flex align-items-center justify-content-center gap-2">
+                  Sign In <ArrowRight size={18} />
                 </button>
 
-                <div className="text-center mt-3">
-                  <span className="text-muted small">New to website? </span>
-                  <Link to="/signup" className="auth-switch-text">Create an account</Link>
+                {/* Redirect Link */}
+                <div className="text-center mt-4">
+                  <span className="text-muted small">Don't have an account? </span>
+                  <Link to="/signup" className="auth-switch-link text-decoration-none fw-semibold">
+                    Create an account
+                  </Link>
                 </div>
 
               </form>
