@@ -284,9 +284,9 @@ body {
 }
 /* Flipkart jaisa yellow ya fir apna pasandida color de sakte ho */
 .category-btn2.active-category {
-  background-color: #2874f0 !important; /* Flipkart Blue */
+  background-color: #ffb703!important; /* Flipkart Blue */
   color: #fff !important;
-  border-color: #2874f0 !important;
+  border-color: #ffb703 !important;
   font-weight: bold;
 }
 .category-btn2:hover {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaChevronDown, FaStar } from "react-icons/fa";
+import { FaChevronDown, FaStar, FaShoppingCart, FaEye } from "react-icons/fa"; // Added icons for look & feel
 import { Link } from "react-router-dom"; 
 
 // FIX: Yahan brackets {} lagaye aur data ki jagah products import kiya taaki niche wala code chal sake
@@ -90,56 +90,79 @@ const LatestCollection = () => {
             className="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-6"
             key={item.id}
           >
-            <div className="product-card-new">
-              {item.tag && (
-                <span className="flipkart-bestseller-badge">{item.tag}</span>
-              )}
+            <div className="product-card-new h-100 d-flex flex-column justify-content-between">
+              <div>
+                {item.tag && (
+                  <span className="flipkart-bestseller-badge">{item.tag}</span>
+                )}
 
-              {/* 1. IMAGE WRAPPED WITH LINK */}
-              <Link to={`/product/${item.id}`} className="text-decoration-none">
-                <div className="product-img-box text-center p-2">
-                  <img
-                    src={item.img}
-                    alt={item.name}
-                    className="img-fluid product-img-new"
-                    style={{ maxHeight: "180px", objectFit: "cover" }}
-                  />
-                </div>
-              </Link>
-
-              <div className="p-3 pt-1">
-                <div className="product-category-text">
-                  {item.isSponsored ? "Sponsored" : <span style={{ visibility: "hidden" }}>Generic</span>}
-                </div>
-
-                {/* 2. TITLE WRAPPED WITH LINK */}
-                <Link to={`/product/${item.id}`} className="text-decoration-none text-dark">
-                  <h6 className="product-title-custom" style={{ cursor: "pointer" }}>
-                    {item.name}
-                  </h6>
+                {/* 1. IMAGE WRAPPED WITH LINK */}
+                <Link to={`/product/${item.id}`} className="text-decoration-none">
+                  <div className="product-img-box text-center p-2">
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      className="img-fluid product-img-new"
+                      style={{ maxHeight: "180px", objectFit: "cover" }}
+                    />
+                  </div>
                 </Link>
 
-                <div className="rating-review-row">
-                  <span className="green-rating-badge">
-                    {item.rating} <FaStar className="ms-1" style={{ fontSize: "9px" }} />
-                  </span>
-                  <span className="review-count-text">{item.reviews}</span>
-                </div>
+                <div className="p-3 pt-1">
+                  <div className="product-category-text">
+                    {item.isSponsored ? "Sponsored" : <span style={{ visibility: "hidden" }}>Generic</span>}
+                  </div>
 
-                <div className="flipkart-price-container">
-                  <span className="flipkart-new-price">{item.price}</span>
-                  {item.oldPrice && (
-                    <span className="flipkart-old-price">{item.oldPrice}</span>
-                  )}
-                  {item.discount && (
-                    <span className="flipkart-discount-text">{item.discount}</span>
-                  )}
-                </div>
+                  {/* 2. TITLE WRAPPED WITH LINK */}
+                  <Link to={`/product/${item.id}`} className="text-decoration-none text-dark">
+                    <h6 className="product-title-custom" style={{ cursor: "pointer" }}>
+                      {item.name}
+                    </h6>
+                  </Link>
 
-                <div className="extra-save-tag">
-                  Buy 2 items, save extra 5%
+                  <div className="rating-review-row">
+                    <span className="green-rating-badge">
+                      {item.rating} <FaStar className="ms-1" style={{ fontSize: "9px" }} />
+                    </span>
+                    <span className="review-count-text">{item.reviews}</span>
+                  </div>
+
+                  <div className="flipkart-price-container">
+                    <span className="flipkart-new-price">{item.price}</span>
+                    {item.oldPrice && (
+                      <span className="flipkart-old-price">{item.oldPrice}</span>
+                    )}
+                    {item.discount && (
+                      <span className="flipkart-discount-text">{item.discount}</span>
+                    )}
+                  </div>
+
+                  <div className="extra-save-tag mb-2">
+                    Buy 2 items, save extra 5%
+                  </div>
                 </div>
               </div>
+
+              {/* NEW ACTION BUTTONS ADDED HERE */}
+              <div className="p-3 pt-0 mt-auto">
+                <div className="d-flex gap-2">
+                  <Link 
+                    to={`/product/${item.id}`} 
+                    className="btn btn-outline-secondary btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                    style={{ fontSize: "12px", whiteSpace: "nowrap" }}
+                  >
+                    <FaEye /> Details
+                  </Link>
+                  <button 
+                    onClick={() => console.log(`Product ${item.id} added to cart`)} // Redux ya Context logic yahan lagao
+                    className="btn btn-warning btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1 fw-bold text-white"
+                    style={{ fontSize: "12px", whiteSpace: "nowrap", backgroundColor: "#ff9f00", borderColor: "#ff9f00" }}
+                  >
+                    <FaShoppingCart /> Add
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
         ))}
