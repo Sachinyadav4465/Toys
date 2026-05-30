@@ -13,6 +13,9 @@ import ProductDetails from './Pages/ProductDetails'
 import Cart from './Pages/Cart'
 import CategoryPage from './Pages/CategoryPage'
 import Shop from './Pages/Shops'
+import Checkout from './Pages/Checkout'
+import Login from './Pages/Login'
+import Signup from './Pages/Signup'
 const App = () => {
 
   return (
@@ -50,6 +53,11 @@ const App = () => {
         />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/shops" element={<Shop />} />
+       <Route path="/checkout" element={<Checkout />} />
+      </Routes>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
 
     </Router>

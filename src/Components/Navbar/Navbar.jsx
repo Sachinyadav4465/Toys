@@ -4,12 +4,10 @@ import { Link } from "react-router-dom";
 import { CartContext } from "../../Context/CartContext";
 
 const Navbar = () => {
-
   const { cartItems } = useContext(CartContext);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3 fw-bold">
-
       <div className="container">
 
         {/* Logo */}
@@ -35,38 +33,35 @@ const Navbar = () => {
 
         {/* Navbar Links */}
         <div className="collapse navbar-collapse" id="navbarNav">
-
           <ul className="navbar-nav mx-auto gap-lg-4 text-center">
-
             <li className="nav-item">
               <Link className="nav-link" to="/">HOME</Link>
             </li>
-
             <li className="nav-item">
               <Link className="nav-link" to="/categories">CATEGORIES</Link>
             </li>
-
             <li className="nav-item">
               <Link className="nav-link" to="/shops">SHOP</Link>
             </li>
-
             <li className="nav-item">
               <Link className="nav-link" to="/blogs">BLOG</Link>
             </li>
-
           </ul>
 
           {/* Right Side */}
-          <div className="d-flex flex-column flex-lg-row gap-3 text-center mt-3 mt-lg-0">
+          <div className="d-flex flex-column flex-lg-row gap-4 align-items-center text-center mt-3 mt-lg-0">
 
-            {/* Wishlist (optional - remove if not used) */}
-            {/* <Link className="text-dark text-decoration-none" to="/wishlist">
-              ♡ Wishlist
-            </Link> */}
+            {/* LOGIN BUTTON: Added here */}
+            <Link 
+              to="/login" 
+              className="btn btn-outline-primary px-4 btn-sm fw-bold" 
+              style={{ borderRadius: "4px", letterSpacing: "0.5px" }}
+            >
+              LOGIN
+            </Link>
 
             {/* Cart Icon */}
-            <Link to="/cart" className="position-relative text-dark">
-
+            <Link to="/cart" className="position-relative text-dark d-inline-block">
               <i className="bi bi-cart fs-4"></i>
 
               {/* Cart Count Badge */}
@@ -80,18 +75,16 @@ const Navbar = () => {
                   rounded-pill
                   bg-danger
                 "
+                style={{ fontSize: "11px" }}
               >
                 {cartItems?.length || 0}
               </span>
-
             </Link>
 
           </div>
-
         </div>
 
       </div>
-
     </nav>
   );
 };

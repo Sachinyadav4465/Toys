@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { CartContext } from "../Context/CartContext";
 import { FaTrash, FaShieldAlt, FaMinus, FaPlus, FaStar } from "react-icons/fa";
-
-// External CSS import
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const {
@@ -13,27 +12,44 @@ const Cart = () => {
     decreaseQty,
   } = useContext(CartContext);
 
-  // Helper function to extract number safely from values like "₹2,599" or "₹534"
+  const navigate = useNavigate();
+
+  // Helper function: Text price ko number me badalne ke liye (Jaise "₹534" -> 534)
   const cleanPrice = (priceStr) => {
     if (!priceStr) return 0;
-    // Strip everything except numbers and decimals
     return parseFloat(priceStr.replace(/[₹,]/g, ""));
   };
 
-  // TOTAL PRICE CALCULATION
-  const totalPrice = cartItems.reduce(
-    (acc, item) => acc + cleanPrice(item.price) * item.qty,
-    0
-  );
-
-  // FIXED DISCOUNT (Change dynamically if needed)
+  // Calculations
+  const totalPrice = cartItems.reduce((acc, item) => acc + cleanPrice(item.price) * item.qty, 0);
   const discount = cartItems.length > 0 ? 120 : 0;
-
-  // FINAL AMOUNT TO PAY
   const finalPrice = totalPrice - discount;
 
+  // MERN-READY CHECKOUT LOGIC
+  const handlePlaceOrder = async () => {
+    if (cartItems.length === 0) return;
+
+    // BACKEND INTEGRATION: Pehle check karenge ki user ke paas Token hai ya nahi
+    const token = localStorage.getItem("token"); // Token backend se milega login ke baad
+
+    if (!token) {
+      toast.warning("Please login first to place your order!");
+      navigate("/login");
+      return;
+    }
+
+    // Agar token mil gaya, toh data checkout page par bhej do
+    navigate("/checkout", {
+      state: {
+        isFromCart: true,
+        items: cartItems,
+        totalAmount: `₹${finalPrice.toLocaleString("en-IN")}`
+      }
+    });
+  };
+
   return (
-    <div className="cart-page py-5">
+    <div className="cart-page py-5" style={{ background: "#f1f3f6", minHeight: "90vh" }}>
       <div className="container">
         <div className="row g-4">
           
@@ -46,7 +62,7 @@ const Cart = () => {
               </div>
             ) : (
               cartItems.map((item) => (
-                <div className="cart-product-card mb-3" key={item.id}>
+                <div className="cart-product-card mb-3 p-3 bg-white border" key={item.id} style={{ borderRadius: "2px" }}>
                   <div className="row align-items-center">
                     
                     {/* PRODUCT IMAGE */}
@@ -63,45 +79,41 @@ const Cart = () => {
 
                     {/* PRODUCT INFO */}
                     <div className="col-md-7 col-8">
-                      <p className="cart-category-text m-0">{item.category}</p>
-                      <h5 className="cart-product-title-custom my-1">{item.name}</h5>
+                      <p className="text-uppercase fw-bold text-muted small m-0" style={{ fontSize: "12px" }}>{item.category}</p>
+                      <h5 className="my-1 fw-normal text-dark" style={{ fontSize: "16px" }}>{item.name}</h5>
                       
-                      {/* GREEN RATING BADGE */}
+                      {/* RATING */}
                       <div className="d-flex align-items-center gap-2 mb-2">
-                        <span className="green-rating-badge" style={{ padding: "1px 5px", fontSize: "11px" }}>
-                          {item.rating || "4.1"} <FaStar className="ms-1" style={{ fontSize: "8px" }} />
+                        <span className="bg-success text-white px-2 py-0 rounded small" style={{ fontSize: "11px" }}>
+                          {item.rating || "4.1"} <FaStar className="ms-1" style={{ fontSize: "8px", marginTop: "-2px" }} />
                         </span>
                         <span className="text-muted small">({item.reviews || "2,340"})</span>
                       </div>
 
-                      {/* PRICES & DISCOUNT */}
-                      <div className="flipkart-price-container mb-0">
-                        <span className="flipkart-new-price">{item.price}</span>
-                        {item.oldPrice && (
-                          <span className="flipkart-old-price">{item.oldPrice}</span>
-                        )}
-                        {item.discount && (
-                          <span className="flipkart-discount-text">{item.discount}</span>
-                        )}
+                      {/* PRICES */}
+                      <div className="mb-2">
+                        <span className="fw-bold text-dark fs-5 me-2">{item.price}</span>
+                        {item.oldPrice && <span className="text-muted text-decoration-line-through me-2 small">{item.oldPrice}</span>}
+                        {item.discount && <span className="text-success fw-bold small">{item.discount}</span>}
                       </div>
 
-                      {/* FLIPKART STYLE QUANTITY SET */}
-                      <div className="qty-container-fk">
-                        <button className="qty-btn-fk" onClick={() => decreaseQty(item.id)}>
-                          <FaMinus />
+                      {/* QUANTITY SET */}
+                      <div className="d-flex align-items-center gap-2">
+                        <button className="btn btn-sm btn-light border rounded-circle" onClick={() => decreaseQty(item.id)} disabled={item.qty <= 1}>
+                          <FaMinus style={{ fontSize: "10px" }} />
                         </button>
-                        <div className="qty-count-text">{item.qty}</div>
-                        <button className="qty-btn-fk" onClick={() => increaseQty(item.id)}>
-                          <FaPlus />
+                        <span className="px-3 py-1 border text-center bg-light fw-bold" style={{ minWidth: "40px", fontSize: "14px" }}>{item.qty}</span>
+                        <button className="btn btn-sm btn-light border rounded-circle" onClick={() => increaseQty(item.id)}>
+                          <FaPlus style={{ fontSize: "10px" }} />
                         </button>
                       </div>
                     </div>
 
-                    {/* ACTIONS: REMOVE BUTTON */}
+                    {/* ACTIONS: REMOVE */}
                     <div className="col-md-3 text-md-end text-start mt-3 mt-md-0">
-                      <button className="remove-btn-fk" onClick={() => removeFromCart(item.id)}>
+                      <button className="btn btn-link text-danger text-decoration-none fw-bold small p-0" onClick={() => removeFromCart(item.id)}>
                         <FaTrash className="me-2" style={{ fontSize: "13px", marginTop: "-3px" }} />
-                        Remove
+                        REMOVE
                       </button>
                     </div>
 
@@ -111,45 +123,48 @@ const Cart = () => {
             )}
           </div>
 
-          {/* RIGHT SIDE: PRICE CALCULATION SUMMARY */}
+          {/* RIGHT SIDE: SUMMARY */}
           <div className="col-lg-4">
-            <div className="price-details-box">
-              <h4 className="price-details-title">Price Details</h4>
+            <div className="price-details-box bg-white border p-4 shadow-sm" style={{ borderRadius: "2px" }}>
+              <h5 className="text-muted fw-bold text-uppercase border-bottom pb-3 mb-3" style={{ fontSize: "14px", letterSpacing: "0.5px" }}>Price Details</h5>
 
-              <div className="price-line-fk">
+              <div className="d-flex justify-content-between mb-3 text-dark">
                 <span>Price ({cartItems.length} items)</span>
                 <span>₹{totalPrice.toLocaleString("en-IN")}</span>
               </div>
 
-              <div className="price-line-fk">
+              <div className="d-flex justify-content-between mb-3">
                 <span>Discount</span>
                 <span className="text-success">- ₹{discount}</span>
               </div>
 
-              <div className="price-line-fk">
+              <div className="d-flex justify-content-between mb-3 border-bottom pb-3">
                 <span>Delivery Charges</span>
                 <span className="text-success">FREE</span>
               </div>
 
-              {/* TOTAL AMOUNT ROW */}
-              <div className="price-line-fk total-amount-line">
+              <div className="d-flex justify-content-between fw-bold text-dark fs-5 mb-4 pt-2">
                 <span>Total Amount</span>
                 <span>₹{finalPrice.toLocaleString("en-IN")}</span>
               </div>
 
-              {/* SAVE GREEN BOX */}
               {discount > 0 && (
-                <div className="save-msg-fk text-center">
+                <div className="p-2 alert alert-success text-center fw-bold small mb-4" style={{ borderRadius: "2px" }}>
                   🎉 You will save ₹{discount} on this order
                 </div>
               )}
 
-              {/* ACTION BUTTON */}
-              <button className="place-order-btn-fk">Place Order</button>
+              <button 
+                className="btn w-100 py-3 fw-bold text-white text-uppercase" 
+                style={{ background: "#fb641b", borderRadius: "2px", border: "none", fontSize: "16px" }} 
+                onClick={handlePlaceOrder}
+                disabled={cartItems.length === 0}
+              >
+                Place Order
+              </button>
 
-              {/* SECURITY SHIELD */}
-              <div className="secure-footer-fk">
-                <FaShieldAlt className="text-muted" style={{ fontSize: "18px" }} />
+              <div className="d-flex align-items-center justify-content-center gap-2 mt-4 text-muted small fw-bold">
+                <FaShieldAlt style={{ fontSize: "18px" }} />
                 <span>Safe and Secure Payments</span>
               </div>
             </div>

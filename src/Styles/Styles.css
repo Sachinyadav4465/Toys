@@ -282,7 +282,13 @@ body {
   font-weight: 600;
   transition: 0.3s ease;
 }
-
+/* Flipkart jaisa yellow ya fir apna pasandida color de sakte ho */
+.category-btn2.active-category {
+  background-color: #2874f0 !important; /* Flipkart Blue */
+  color: #fff !important;
+  border-color: #2874f0 !important;
+  font-weight: bold;
+}
 .category-btn2:hover {
   background: #ffb703;
   color: white;
@@ -1854,4 +1860,93 @@ body {
   font-size: 14px;
   font-weight: 600;
   margin-top: 20px;
+}
+
+/* Login CSS PAGE  */
+/* auth.css */
+.auth-wrapper {
+  background: #f1f3f6;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 850px;
+}
+
+/* Left Sidebar Layout (Flipkart Style) */
+.auth-sidebar {
+  background: #2874f0;
+  color: #fff;
+  padding: 40px 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.auth-sidebar h3 {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.auth-sidebar p {
+  font-size: 16px;
+  color: #dbecf8;
+  line-height: 1.5;
+}
+
+/* Form Styling */
+.auth-form-container {
+  padding: 50px 40px;
+}
+
+.auth-input-group .form-control {
+  border: none;
+  border-bottom: 2px solid #e0e0e0;
+  border-radius: 0;
+  padding: 10px 5px;
+  box-shadow: none;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.auth-input-group .form-control:focus {
+  border-bottom-color: #2874f0;
+}
+
+.auth-btn-orange {
+  background: #fb641b;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 2px;
+  padding: 12px;
+  width: 100%;
+  text-transform: uppercase;
+  font-size: 15px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+  transition: background 0.2s ease;
+}
+
+.auth-btn-orange:hover {
+  background: #f35607;
+  color: #fff;
+}
+
+.auth-switch-text {
+  font-size: 14px;
+  color: #2874f0;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-switch-text:hover {
+  text-decoration: underline;
 }
