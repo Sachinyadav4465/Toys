@@ -81,10 +81,10 @@ const Hero = () => {
           >
             <div className="banner-content">
               <p className="text-muted fw-bold small mb-2" style={{ letterSpacing: "1px" }}>
-                💓Meet you soon Beta💓
+                NEW COLLECTION
               </p>
               <h1 className="fw-bold display-5 text-dark" style={{ lineHeight: "1.2" }}>
-                JUHI 💓💓💓💓 <br /> I love you my wife
+                MEET TEDDY <br /> THE BEAR
               </h1>
               <button className="btn btn-warning px-4 py-2 mt-3 fw-bold text-white" style={{ background: "#fb641b", border: "none", borderRadius: "2px", textTransform: "uppercase" }}>
                 READ MORE

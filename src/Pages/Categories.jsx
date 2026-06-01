@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { FaChevronDown, FaStar, FaShoppingCart, FaEye } from "react-icons/fa"; // Added icons for look & feel
-import { Link } from "react-router-dom"; 
+import { FaChevronDown, FaStar, FaShoppingCart } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom"; 
+import { toast } from "react-toastify"; // Toast notifications user alert ke liye
 
-// FIX: Yahan brackets {} lagaye aur data ki jagah products import kiya taaki niche wala code chal sake
 import { products } from "../data/products"; 
 
 const categories = [
@@ -15,6 +15,7 @@ const categories = [
 ];
 
 const LatestCollection = () => {
+  const navigate = useNavigate();
   const [showCategory, setShowCategory] = useState(false);
   const [activeCategory, setActiveCategory] = useState("SHOW ALL");
 
@@ -23,10 +24,30 @@ const LatestCollection = () => {
     setShowCategory(false);
   };
 
-  // Ab yahan 'products' perfectly kaam karega kyunki upar sahi naam se import ho chuka hai
   const filteredProducts = activeCategory === "SHOW ALL"
     ? products
     : products.filter((item) => item.category === activeCategory);
+
+  // --- NEW UPDATE: ADD TO CART FUNCTION ---
+  const handleAddToCart = (item) => {
+    // 1. Pehle se saved cart items nikaalo (agar pehle kuch add kiya ho)
+    const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    
+    // 2. Check karo item pehle se cart me hai ya nahi
+    const isItemInCart = existingCart.some((cartItem) => cartItem.id === item.id);
+    
+    if (!isItemInCart) {
+      // 3. Agar nahi hai, toh array me push karo quantity: 1 ke saath
+      const updatedCart = [...existingCart, { ...item, quantity: 1 }];
+      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+      toast.success(`${item.name} added to cart!`);
+    } else {
+      toast.info("Product already in your cart!");
+    }
+
+    // 4. Ab direct Cart page par bhejdo jahan data show hoga
+    navigate("/cart");
+  };
 
   return (
     <div className="container py-5">
@@ -96,7 +117,7 @@ const LatestCollection = () => {
                   <span className="flipkart-bestseller-badge">{item.tag}</span>
                 )}
 
-                {/* 1. IMAGE WRAPPED WITH LINK */}
+                {/* IMAGE LINK */}
                 <Link to={`/product/${item.id}`} className="text-decoration-none">
                   <div className="product-img-box text-center p-2">
                     <img
@@ -113,7 +134,7 @@ const LatestCollection = () => {
                     {item.isSponsored ? "Sponsored" : <span style={{ visibility: "hidden" }}>Generic</span>}
                   </div>
 
-                  {/* 2. TITLE WRAPPED WITH LINK */}
+                  {/* TITLE LINK */}
                   <Link to={`/product/${item.id}`} className="text-decoration-none text-dark">
                     <h6 className="product-title-custom" style={{ cursor: "pointer" }}>
                       {item.name}
@@ -143,22 +164,15 @@ const LatestCollection = () => {
                 </div>
               </div>
 
-              {/* NEW ACTION BUTTONS ADDED HERE */}
+              {/* ACTION BUTTON */}
               <div className="p-3 pt-0 mt-auto">
                 <div className="d-flex gap-2">
-                  <Link 
-                    to={`/product/${item.id}`} 
-                    className="btn btn-outline-secondary btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1"
-                    style={{ fontSize: "12px", whiteSpace: "nowrap" }}
-                  >
-                    <FaEye /> Details
-                  </Link>
                   <button 
-                    onClick={() => console.log(`Product ${item.id} added to cart`)} // Redux ya Context logic yahan lagao
+                    onClick={() => handleAddToCart(item)} // Naye logic function ko trigger kiya
                     className="btn btn-warning btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1 fw-bold text-white"
                     style={{ fontSize: "12px", whiteSpace: "nowrap", backgroundColor: "#ff9f00", borderColor: "#ff9f00" }}
                   >
-                    <FaShoppingCart /> Add
+                    <FaShoppingCart /> Add to Cart
                   </button>
                 </div>
               </div>

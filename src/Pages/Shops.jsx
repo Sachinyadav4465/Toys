@@ -1,35 +1,49 @@
 import React, { useState } from "react";
-import { products } from "../data/products";
-import { Link } from "react-router-dom";
-import { FaStar, FaEye, FaShoppingCart } from "react-icons/fa"; // Imported together cleanly
+import { Link, useNavigate } from "react-router-dom"; // FIX 1: useNavigate ko import kiya
+import { FaStar, FaShoppingCart } from "react-icons/fa"; 
+import { toast } from "react-toastify";
+import { products } from "../data/products"; 
 
 const Shop = () => {
+  const navigate = useNavigate(); 
   const [sortType, setSortType] = useState("");
 
-  // Copy Products
-  let sortedProducts = [...products];
-
-  // Helper function: '₹534' ya '₹3,200' se strings hatakar pure number nikalne ke liye
+  // Helper function: Price string se symbols hatakar pure number nikalne ke liye
   const cleanPrice = (priceStr) => {
     if (!priceStr) return 0;
     return parseFloat(priceStr.toString().replace(/[₹,]/g, ""));
   };
 
-  // LOW TO HIGH SORTING
+  // Copy & Sort Products
+  let sortedProducts = [...products];
   if (sortType === "low") {
     sortedProducts.sort((a, b) => cleanPrice(a.price) - cleanPrice(b.price));
-  }
-
-  // HIGH TO LOW SORTING
-  if (sortType === "high") {
+  } else if (sortType === "high") {
     sortedProducts.sort((a, b) => cleanPrice(b.price) - cleanPrice(a.price));
   }
+
+  // --- ADD TO CART & NAVIGATE LOGIC ---
+  const handleAddToCart = (item) => {
+    const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const isItemInCart = existingCart.some((cartItem) => cartItem.id === item.id);
+    
+    if (!isItemInCart) {
+      const updatedCart = [...existingCart, { ...item, quantity: 1 }];
+      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+      toast.success(`${item.name} added to cart!`);
+    } else {
+      toast.info("Product already in your cart!");
+    }
+    
+    // Aap chahein toh user ko direct /cart ya fir database route par bhej sakte hain
+    navigate("/cart");
+  };
 
   return (
     <div className="container py-5">
       <div className="row">
         
-        {/* SIDEBAR FILTERS (Flipkart Clean Sidebar Look) */}
+        {/* SIDEBAR FILTERS */}
         <div className="col-lg-3 mb-4">
           <div className="hero-category-box p-3" style={{ background: "#fff", border: "1px solid #e0e0e0" }}>
             <h5 className="fw-bold mb-3 pb-2 text-dark" style={{ borderBottom: "1px solid #f0f0f0", fontSize: "18px" }}>
@@ -59,11 +73,7 @@ const Shop = () => {
         <div className="col-lg-9">
           <div className="row g-3">
             {sortedProducts.map((item) => (
-              <div
-                className="col-xl-4 col-lg-4 col-md-6 col-6"
-                key={item.id}
-              >
-                {/* FIX 1: Added h-100 and flexbox classes to the main card container */}
+              <div className="col-xl-4 col-lg-4 col-md-6 col-6" key={item.id}>
                 <div className="product-card-new h-100 d-flex flex-column justify-content-between">
                   
                   <div>
@@ -86,16 +96,17 @@ const Shop = () => {
 
                     {/* CONTENT AREA */}
                     <div className="p-3 pt-1">
-                      
                       {/* SPONSORED TEXT */}
                       <div className="product-category-text">
                         {item.isSponsored ? "Sponsored" : <span style={{ visibility: "hidden" }}>Generic</span>}
                       </div>
 
                       {/* PRODUCT TITLE */}
-                      <h6 className="product-title-custom">{item.name}</h6>
+                      <Link to={`/product/${item.id}`} className="text-decoration-none text-dark">
+                        <h6 className="product-title-custom" style={{ cursor: "pointer" }}>{item.name}</h6>
+                      </Link>
 
-                      {/* GREEN RATING BADGE & REVIEWS */}
+                      {/* GREEN RATING BADGE */}
                       <div className="rating-review-row">
                         <span className="green-rating-badge">
                           {item.rating || "4.0"}{" "}
@@ -124,22 +135,15 @@ const Shop = () => {
                     </div>
                   </div>
 
-                  {/* FIX 2: Moved Action Buttons outside the content div to make mt-auto push it down cleanly */}
+                  {/* ACTION BUTTONS */}
                   <div className="p-3 pt-0 mt-auto">
                     <div className="d-flex gap-2">
-                      <Link 
-                        to={`/product/${item.id}`} 
-                        className="btn btn-outline-secondary btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1"
-                        style={{ fontSize: "12px", whiteSpace: "nowrap" }}
-                      >
-                        <FaEye /> Details
-                      </Link>
                       <button 
-                        onClick={() => console.log(`Product ${item.id} added to cart`)} 
+                        onClick={() => handleAddToCart(item)} // FIX 2: Dynamic single item save logic handle kiya
                         className="btn btn-warning btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1 fw-bold text-white"
                         style={{ fontSize: "12px", whiteSpace: "nowrap", backgroundColor: "#ff9f00", borderColor: "#ff9f00" }}
                       >
-                        <FaShoppingCart /> Add
+                        <FaShoppingCart /> Add to Cart
                       </button>
                     </div>
                   </div>

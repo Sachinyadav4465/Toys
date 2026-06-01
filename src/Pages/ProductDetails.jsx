@@ -51,7 +51,7 @@ const ProductDetails = () => {
                 className="btn fk-btn fk-cart-btn flex-fill py-3 fw-bold text-uppercase d-flex align-items-center justify-content-center gap-2"
                 style={{ background: "#ff9f00", color: "#fff", border: "none", fontSize: "16px", borderRadius: "2px" }}
                 onClick={() => {
-                  addToCart(product);
+                  navigate("/checkout",{state:{product}});
                   toast.success("Product Added To Cart");
                 }}
               >
